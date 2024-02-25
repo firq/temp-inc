@@ -20,10 +20,10 @@ public class AbstractIntegrationTest {
     static {
         kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.4.0"));
         kafkaContainer.start();
-        Runtime.getRuntime().addShutdownHook(new Thread(kafkaContainer::stop));
+//        Runtime.getRuntime().addShutdownHook(new Thread(kafkaContainer::stop));
         postgres = new PostgreSQLContainer<>(DockerImageName.parse("postgres:12.7"));
         postgres.start();
-        Runtime.getRuntime().addShutdownHook(new Thread(postgres::stop));
+//        Runtime.getRuntime().addShutdownHook(new Thread(postgres::stop));
     }
 
     @DynamicPropertySource

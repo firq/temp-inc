@@ -1,4 +1,7 @@
 spring:
+#  springdoc:
+#    packagesToScan: io.kontakt.apps.temerature.analytics.api.controller
+#  pathsToMatch: /public/v1
   mvc:
     pathmatch:
       matching-strategy: ant-path-matcher
@@ -43,11 +46,3 @@ spring:
             functions:
               anomalyDetectorProcessor:
                 application-id: anomaly-analytics
-  kafka:
-    streams:
-      properties:
-        spring:
-          json:
-            use:
-              type:
-                headers: false

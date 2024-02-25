@@ -4,7 +4,7 @@ import io.kontak.apps.event.TemperatureReading;
 
 import java.util.OptionalDouble;
 
-public enum TemperatureDiffersCalculator {
+enum TemperatureDiffersCalculator {
     ;
 
     static final int TEMPERATURE_DIFFERENCE_LIMIT = 5;

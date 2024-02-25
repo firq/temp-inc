@@ -40,7 +40,7 @@ class AnomalyAnalyticsFullFlowIntegrationTest extends AbstractIntegrationTest {
         // then: anomalies are produced on kafka topic
         produceAnomalies(firstAnomaly, secondAnomaly, anomalyOnDifferentThermometer);
         // when: endpoint is queried for anomalies from first thermometer
-        String responseString = mvc.perform(MockMvcRequestBuilders.get("/anomalies/thermometer/" + thermometer1Id).accept(MediaType.APPLICATION_JSON))
+        String responseString = mvc.perform(MockMvcRequestBuilders.get("/public/v1/anomalies/thermometer/" + thermometer1Id).accept(MediaType.APPLICATION_JSON))
                 // then: application responds with ok status and list of anomalies
                 .andExpect(status().isOk()).andReturn()
                 .getResponse().getContentAsString();
@@ -64,7 +64,7 @@ class AnomalyAnalyticsFullFlowIntegrationTest extends AbstractIntegrationTest {
         // then: anomalies are produced on kafka topic
         produceAnomalies(firstAnomaly, secondAnomaly, anomalyFromDifferentRoom);
         // when: endpoint is queried for anomalies from first room
-        String responseString = mvc.perform(MockMvcRequestBuilders.get("/anomalies/room/" + roomId).accept(MediaType.APPLICATION_JSON))
+        String responseString = mvc.perform(MockMvcRequestBuilders.get("/public/v1/anomalies/room/" + roomId).accept(MediaType.APPLICATION_JSON))
                 // then: application responds with ok status and list of anomalies
                 .andExpect(status().isOk()).andReturn()
                 .getResponse().getContentAsString();
@@ -92,7 +92,7 @@ class AnomalyAnalyticsFullFlowIntegrationTest extends AbstractIntegrationTest {
         // then: anomalies are produced on kafka topic
         produceAnomalies(firstAnomaly, secondAnomaly, thirddAnomaly, anomalyOnDifferentThermometer, secondAnomalyOnDifferentThermometer);
         // when: endpoint is queried for anomalies from first room
-        String responseString = mvc.perform(MockMvcRequestBuilders.get("/thermometers/anomalies/above-threshold/2").accept(MediaType.APPLICATION_JSON))
+        String responseString = mvc.perform(MockMvcRequestBuilders.get("/public/v1/thermometers/anomalies/above-threshold/2").accept(MediaType.APPLICATION_JSON))
                 // then: application responds with ok status and list of thermometers with over 2 anomalies
                 .andExpect(status().isOk()).andReturn()
                 .getResponse().getContentAsString();

@@ -1,8 +1,8 @@
 package io.kontakt.apps.temerature.analytics.api.repository;
 
 import io.kontak.apps.event.Anomaly;
+import jakarta.persistence.*;
 
-import javax.persistence.*;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -12,7 +12,7 @@ public class AnomalyEntity {
 
     @Id
     @GeneratedValue
-    @Column( columnDefinition = "uuid", updatable = false )
+    @Column(columnDefinition = "uuid", updatable = false)
     private UUID id;
     private double temperature;
     private String roomId;

@@ -81,7 +81,7 @@ docker-compose -f development/boot-all.yaml up -d
 
 Exposed endpoints can be accessed via Swagger:
 
-http://localhost:8080/swagger-ui/#/anomaly-analytics-controller
+http://localhost:8080/swagger-ui/index.html
 
 
 for rooms with anomalies try 

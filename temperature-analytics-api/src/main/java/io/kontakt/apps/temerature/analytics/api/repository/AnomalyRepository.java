@@ -1,13 +1,13 @@
 package io.kontakt.apps.temerature.analytics.api.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface AnomalyRepository extends JpaRepository<AnomalyEntity, Long> {
+public interface AnomalyRepository extends CrudRepository<AnomalyEntity, Long> {
 
     List<AnomalyEntity> findAlaByThermometerId(String thermometerId);
     List<AnomalyEntity> findAlaByRoomId(String roomId);
