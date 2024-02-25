@@ -64,6 +64,20 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>io.kontakt.apps.anomaly.detector.AnomalyDetectorApplication</mainClass>
+                    <layout>JAR</layout>
+                    <image>
+                        <name>anomaly-detector</name>
+                    </image>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

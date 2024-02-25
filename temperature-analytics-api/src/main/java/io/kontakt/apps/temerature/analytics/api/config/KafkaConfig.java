@@ -1,4 +1,4 @@
-package io.kontak.apps.temperature.generator.config;
+package io.kontakt.apps.temerature.analytics.api.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -8,22 +8,22 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import io.kontak.apps.event.TemperatureReading;
-import io.kontak.apps.temperature.generator.TemperatureStreamPublisher;
+import io.kontak.apps.event.Anomaly;
+import io.kontakt.apps.temerature.analytics.api.AnomaliesSaver;
+import io.kontakt.apps.temerature.analytics.api.AnomalyService;
+import org.apache.kafka.streams.kstream.KStream;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.Message;
-import reactor.core.publisher.Flux;
 
 import java.util.TimeZone;
-import java.util.function.Supplier;
+import java.util.function.Consumer;
 
 @Configuration
 public class KafkaConfig {
 
     @Bean
-    public Supplier<Flux<Message<TemperatureReading>>> messageProducer(TemperatureStreamPublisher publisher) {
-        return publisher::getMessageProducer;
+    public Consumer<KStream<String, Anomaly>> anomalyDetectedProcessor(AnomalyService anomalyService) {
+        return new AnomaliesSaver(anomalyService);
     }
 
     @Bean
@@ -37,6 +37,5 @@ public class KafkaConfig {
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .build();
     }
-
 
 }

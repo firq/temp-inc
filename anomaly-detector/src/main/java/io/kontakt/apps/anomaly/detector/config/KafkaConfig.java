@@ -1,4 +1,4 @@
-package io.kontak.apps.temperature.generator.config;
+package io.kontakt.apps.anomaly.detector.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -8,22 +8,23 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.kontak.apps.event.Anomaly;
 import io.kontak.apps.event.TemperatureReading;
-import io.kontak.apps.temperature.generator.TemperatureStreamPublisher;
+import io.kontakt.apps.anomaly.detector.AnomalyDetector;
+import io.kontakt.apps.anomaly.detector.TemperatureMeasurementsListener;
+import org.apache.kafka.streams.kstream.KStream;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.Message;
-import reactor.core.publisher.Flux;
 
 import java.util.TimeZone;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 @Configuration
 public class KafkaConfig {
 
     @Bean
-    public Supplier<Flux<Message<TemperatureReading>>> messageProducer(TemperatureStreamPublisher publisher) {
-        return publisher::getMessageProducer;
+    public Function<KStream<String, TemperatureReading>, KStream<String, Anomaly>> anomalyDetectorProcessor(AnomalyDetector anomalyDetector) {
+        return new TemperatureMeasurementsListener(anomalyDetector);
     }
 
     @Bean
@@ -37,6 +38,5 @@ public class KafkaConfig {
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .build();
     }
-
 
 }

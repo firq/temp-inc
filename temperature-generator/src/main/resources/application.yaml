@@ -1,0 +1,26 @@
+temperature-generator:
+  rate:
+    seconds: 2
+spring:
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:29092
+      function:
+        definition: messageProducer
+      bindings:
+        messageProducer-out-0:
+          contentType: application/json
+          destination: temperature-measurements
+          group: temperature-generator
+          producer:
+            partition-key-expression: headers['identifier']
+  kafka:
+    streams:
+      properties:
+        spring:
+          json:
+            use:
+              type:
+                headers: false

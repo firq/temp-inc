@@ -1,0 +1,40 @@
+spring:
+  cloud:
+    stream:
+      binders:
+        kafka:
+          environment:
+            spring:
+              cloud:
+                stream:
+                  kafka:
+                    streams:
+                      binder:
+                        brokers: localhost:29092
+          type: kstream
+      bindings:
+        anomalyDetectorProcessor-in-0:
+          binder: kafka
+          content-type: application/json
+          destination: temperature-measurements
+        anomalyDetectorProcessor-out-0:
+          binder: kafka
+          content-type: application/json
+          destination: temperature-anomalies
+      function:
+        definition: anomalyDetectorProcessor
+      kafka:
+        streams:
+          binder:
+            deserialization-exception-handler: logandcontinue
+            functions:
+              anomalyDetectorProcessor:
+                application-id: anomaly-detector
+  kafka:
+    streams:
+      properties:
+        spring:
+          json:
+            use:
+              type:
+                headers: false

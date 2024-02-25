@@ -53,3 +53,48 @@ Modules and their description:
 Goal is to implement solution flow end to end, from data generator, to anomaly detection, storing detected anomalies in database and have a REST API to query for anomaly analytics.
   
 Repository is configured as template, please do not fork it, you can create a copy of this repo, [docs here](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template#creating-a-repository-from-a-template).
+
+## Solution startup
+It is required to have docker up and running
+
+Build images out of prepared modules:
+
+temperature-generator
+```shell
+mvn -f temperature-generator/pom.xml spring-boot:build-image
+```
+
+anomaly-detector
+```shell
+mvn -f anomaly-detector/pom.xml spring-boot:build-image
+```
+
+temperature-analytics-api
+```shell
+mvn -f temperature-analytics-api/pom.xml spring-boot:build-image
+```
+
+Run updated compose
+```shell
+docker-compose -f development/boot-all.yaml up -d
+```
+
+Exposed endpoints can be accessed via Swagger:
+
+http://localhost:8080/swagger-ui/index.html
+
+
+for rooms with anomalies try 
+`anomalyProneRarelyReportingRoom` and `siberia`
+
+
+Run to terminate
+```shell
+docker-compose -f development/boot-all.yaml down
+```
+
+## Disclaimers
+Storage of anomalies takes place in analytics-api module, as it is the only consumer of this data and creation of separate module would not make sense.
+
+Generated & processed readings are reduced to one record in batch as example and [AnomalyDetector.java](anomaly-detector%2Fsrc%2Fmain%2Fjava%2Fio%2Fkontakt%2Fapps%2Fanomaly%2Fdetector%2FAnomalyDetector.java) contract states - by allowing only ONE anomaly.
+If that is not the case feel free to comment and ask me for adjustments.

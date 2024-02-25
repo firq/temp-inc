@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.Duration;
-import java.time.Instant;
+
+import static io.kontakt.apps.anomaly.detector.TemperatureReadingTestCreator.avgTemp20Degree;
+import static io.kontakt.apps.anomaly.detector.TemperatureReadingTestCreator.ofTemperature;
 
 public class TemperatureMeasurementsListenerTest extends AbstractIntegrationTest {
 
@@ -27,8 +29,10 @@ public class TemperatureMeasurementsListenerTest extends AbstractIntegrationTest
                      kafkaContainer.getBootstrapServers(),
                      inputTopic
              )) {
-            TemperatureReading temperatureReading = new TemperatureReading(20d, "room", "thermometer", Instant.parse("2023-01-01T00:00:00.000Z"));
+            TemperatureReading temperatureReading = avgTemp20Degree();
             producer.produce(temperatureReading.thermometerId(), temperatureReading);
+            TemperatureReading temperatureReadingAnomaly = ofTemperature(30d);
+            producer.produce(temperatureReadingAnomaly.thermometerId(), temperatureReadingAnomaly);
             consumer.drain(
                     consumerRecords -> consumerRecords.stream().anyMatch(r -> r.value().thermometerId().equals(temperatureReading.thermometerId())),
                     Duration.ofSeconds(5)
