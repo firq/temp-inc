@@ -1,4 +1,4 @@
-version: '3.8-postgres-flavour'
+version: '1'
 services:
   zookeeper-temp-task:
     image: confluentinc/cp-zookeeper:7.4.0
@@ -35,7 +35,7 @@ services:
       - zookeeper-temp-task
       - broker-temp-task
     ports:
-      - 8085:9000
+      - "8085:9000"
     environment:
       KAFKA_BROKERCONNECT: broker-temp-task:9092
 
@@ -48,3 +48,33 @@ services:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=anomalies
+
+# required to first build these images & store into local registry
+  temperature-analytics-api:
+    image: temperature-analytics-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - anomaly-db
+      - kafdrop-temp-task
+    environment:
+      - spring.datasource.url=jdbc:postgresql://host.docker.internal:5432/anomalies
+      - spring.cloud.stream.binders.kafka.environment.spring.cloud.stream.kafka.streams.binder.brokers=broker-temp-task:9092
+
+  anomaly-detector:
+    image: anomaly-detector
+    ports:
+      - "8081:8080"
+    depends_on:
+      - kafdrop-temp-task
+    environment:
+      - spring.cloud.stream.binders.kafka.environment.spring.cloud.stream.kafka.streams.binder.brokers=broker-temp-task:9092
+
+  temperature-generator:
+    image: temperature-generator
+    ports:
+      - "8082:8080"
+    depends_on:
+      - kafdrop-temp-task
+    environment:
+      - spring.cloud.stream.kafka.binder.brokers=broker-temp-task:9092

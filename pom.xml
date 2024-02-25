@@ -19,7 +19,7 @@
 	<modules>
 		<module>temperature-generator</module>
 		<module>anomaly-detector</module>
-		<module>anomaly-storage</module>
+<!--		decided to get rid of storage, logic added in analytics-api-->
 		<module>temperature-analytics-api</module>
 		<module>temperature-domain</module>
 	</modules>

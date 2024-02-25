@@ -1,0 +1,53 @@
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/anomalies
+    username: user
+    password: password
+    driverClassName: org.postgresql.Driver
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+  cloud:
+    stream:
+      binders:
+        kafka:
+          environment:
+            spring:
+              cloud:
+                stream:
+                  kafka:
+                    streams:
+                      binder:
+                        brokers: localhost:29092
+          type: kstream
+      bindings:
+        anomalyDetectedProcessor-in-0:
+          binder: kafka
+          content-type: application/json
+          destination: temperature-anomalies
+      function:
+        definition: anomalyDetectedProcessor
+      kafka:
+        streams:
+          binder:
+            deserialization-exception-handler: logandcontinue
+            functions:
+              anomalyDetectorProcessor:
+                application-id: anomaly-analytics
+  kafka:
+    streams:
+      properties:
+        spring:
+          json:
+            use:
+              type:
+                headers: false
